@@ -1,0 +1,495 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f4ef">
+  <title>KINH TẾ THỊ TRƯỜNG ĐỊNH HƯỚNG XHCN Ở VIỆT NAM</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #172d36;
+      --muted: #62747a;
+      --paper: #fffefa;
+      --canvas: #f4f2ec;
+      --line: #e6e5dc;
+      --teal: #0d756d;
+      --teal-dark: #095a55;
+      --teal-soft: #e8f4f1;
+      --gold: #e4b64c;
+      --green: #18744e;
+      --green-soft: #e8f5ed;
+      --red: #a64439;
+      --red-soft: #fbefec;
+      --shadow: 0 22px 60px rgba(26, 49, 54, .09), 0 2px 8px rgba(26, 49, 54, .04);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(ellipse at 86% 5%, rgba(228, 182, 76, .15), transparent 26rem),
+        radial-gradient(ellipse at 4% 80%, rgba(13, 117, 109, .08), transparent 27rem),
+        var(--canvas);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+    button { font: inherit; }
+    .page { width: min(100% - 36px, 1050px); margin: 0 auto; padding: 34px 0 28px; }
+    .masthead { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 25px; }
+    .brand { display: inline-flex; gap: 11px; align-items: center; font-size: 13px; font-weight: 750; letter-spacing: .055em; text-transform: uppercase; color: #426067; }
+    .brand-mark { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 12px; color: white; background: var(--teal); box-shadow: 0 5px 14px rgba(13, 117, 109, .2); }
+    .brand-mark svg { width: 19px; height: 19px; }
+    .topic-chip { border: 1px solid #e1ded2; border-radius: 999px; padding: 7px 12px; color: #6d7772; background: rgba(255,255,255,.55); font-size: 12px; font-weight: 650; }
+    .intro { margin: 0 auto 24px; max-width: 760px; text-align: center; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 7px; margin-bottom: 9px; color: var(--teal); font-size: 12px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+    .eyebrow::before, .eyebrow::after { content: ""; width: 17px; height: 1px; background: #96c2b9; }
+    h1 { margin: 0; font-family: Georgia, "Times New Roman", serif; font-size: clamp(29px, 5vw, 44px); letter-spacing: -.035em; line-height: 1.13; font-weight: 700; }
+    .intro p { max-width: 615px; margin: 12px auto 0; color: var(--muted); font-size: 15px; }
+    .game-shell { display: grid; grid-template-columns: minmax(0, 1fr); border: 1px solid rgba(221, 221, 210, .85); border-radius: 22px; overflow: hidden; background: var(--paper); box-shadow: var(--shadow); }
+    .main-panel { padding: 30px clamp(22px, 4vw, 42px) 32px; min-width: 0; }
+    .status-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 11px; }
+    .question-count { color: var(--muted); font-size: 13px; font-weight: 700; }
+    .question-count strong { color: var(--ink); font-size: 14px; }
+    .live-score { display: flex; align-items: center; gap: 7px; color: #7e692f; font-size: 13px; font-weight: 750; }
+    .live-score svg { width: 17px; height: 17px; }
+    .progress-track { width: 100%; height: 7px; overflow: hidden; border-radius: 99px; background: #ecece4; }
+    .progress-fill { width: 0; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--teal), #4ca78c); transition: width .35s ease; }
+    .question-area { min-height: 454px; padding-top: 27px; }
+    .question-label { display: inline-flex; align-items: center; gap: 7px; color: #a27b21; font-size: 11px; font-weight: 800; letter-spacing: .13em; text-transform: uppercase; }
+    .question-label .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 0 4px #f9f1d9; }
+    h2 { margin: 13px 0 21px; font-family: Georgia, "Times New Roman", serif; font-size: clamp(21px, 3vw, 27px); line-height: 1.35; letter-spacing: -.018em; }
+    .question-area h2 { font-family: "Segoe UI", Arial, sans-serif; font-weight: 700; line-height: 1.45; letter-spacing: -.025em; }
+    .answers { display: grid; gap: 10px; }
+    .answer {
+      display: flex; gap: 13px; align-items: flex-start; width: 100%; padding: 13px 15px;
+      color: var(--ink); text-align: left; border: 1px solid #e6e8e1; border-radius: 12px; background: white;
+      cursor: pointer; transition: border-color .18s ease, background .18s ease, box-shadow .18s ease, transform .18s ease;
+    }
+    .answer:hover:not(:disabled) { border-color: #8fbeb5; transform: translateY(-1px); }
+    .answer:focus-visible, .primary:focus-visible, .secondary:focus-visible { outline: 3px solid rgba(13, 117, 109, .25); outline-offset: 2px; }
+    .answer[aria-pressed="true"] { border-color: var(--teal); background: #f2faf8; box-shadow: inset 0 0 0 1px var(--teal); }
+    .answer:disabled { cursor: default; }
+    .answer-key { display: grid; flex: 0 0 28px; place-items: center; width: 28px; height: 28px; margin-top: -1px; border: 1px solid #dfe4df; border-radius: 8px; color: #5b6e6e; background: #fafbf8; font-size: 12px; font-weight: 800; }
+    .answer[aria-pressed="true"] .answer-key { border-color: var(--teal); color: white; background: var(--teal); }
+    .answer-copy { padding-top: 2px; font-family: "Segoe UI", Arial, sans-serif; font-size: 14px; line-height: 1.5; }
+    .answer.is-correct { border-color: #8cc7a5; background: var(--green-soft); }
+    .answer.is-correct .answer-key { border-color: var(--green); color: #fff; background: var(--green); }
+    .answer.is-wrong { border-color: #e0a9a0; background: var(--red-soft); }
+    .answer.is-wrong .answer-key { border-color: var(--red); color: #fff; background: var(--red); }
+    .feedback { display: none; margin-top: 17px; padding: 15px 16px; border-radius: 12px; animation: appear .25s ease both; }
+    .feedback.visible { display: block; }
+    .feedback.correct { border: 1px solid #c8e5d3; background: #f1faf4; }
+    .feedback.incorrect { border: 1px solid #f0d3cc; background: #fff7f4; }
+    .feedback-title { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; font-size: 14px; font-weight: 800; }
+    .feedback.correct .feedback-title { color: var(--green); }
+    .feedback.incorrect .feedback-title { color: var(--red); }
+    .feedback p { margin: 0; color: #4f6262; font-size: 13px; line-height: 1.55; }
+    .controls { display: flex; justify-content: flex-end; gap: 10px; padding-top: 20px; }
+    .primary, .secondary { min-height: 44px; padding: 0 19px; border: 0; border-radius: 11px; font-size: 14px; font-weight: 750; cursor: pointer; transition: transform .18s ease, background .18s ease, opacity .18s ease; }
+    .primary { display: inline-flex; align-items: center; gap: 9px; color: white; background: var(--teal); box-shadow: 0 6px 14px rgba(13, 117, 109, .17); }
+    .primary:hover:not(:disabled) { background: var(--teal-dark); transform: translateY(-1px); }
+    .primary:disabled { opacity: .42; cursor: not-allowed; box-shadow: none; }
+    .primary svg { width: 16px; height: 16px; }
+    .secondary { border: 1px solid #dfe3dc; color: #496064; background: transparent; }
+    .secondary:hover { background: #eff2ed; }
+    .source-note { margin: 19px 2px 0; color: #8a928b; text-align: center; font-size: 11px; }
+    .result { display: none; min-height: 454px; padding: 34px 0 10px; text-align: center; animation: appear .3s ease both; }
+    .result.visible { display: block; }
+    .result-seal { display: grid; place-items: center; width: 68px; height: 68px; margin: 0 auto 15px; border: 1px solid #f0e1b5; border-radius: 22px; color: #98731c; background: #fbf4df; }
+    .result-seal svg { width: 31px; height: 31px; }
+    .result h2 { margin: 0 0 8px; font-size: 32px; }
+    .result-lead { max-width: 475px; margin: 0 auto; color: var(--muted); }
+    .result-score { display: flex; align-items: baseline; justify-content: center; gap: 7px; margin: 22px 0 17px; }
+    .result-score strong { color: var(--teal-dark); font-family: Georgia, "Times New Roman", serif; font-size: 54px; line-height: 1; }
+    .result-score span { color: #788581; font-size: 14px; font-weight: 700; }
+    .result-meter { max-width: 350px; height: 10px; margin: 0 auto 24px; overflow: hidden; border-radius: 99px; background: #ebede6; }
+    .result-meter div { width: 0; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #dca83a, #0d8a75); transition: width .5s ease; }
+    .result-controls { justify-content: center; padding-top: 0; }
+    .result-details { display: flex; justify-content: center; gap: 24px; margin-bottom: 24px; color: #71807c; font-size: 12px; }
+    .result-details strong { color: var(--ink); }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+    @keyframes appear { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 760px) {
+      .page { width: min(100% - 24px, 620px); padding-top: 20px; }
+      .game-shell { grid-template-columns: 1fr; border-radius: 18px; }
+      .main-panel { padding: 24px 21px; }
+      .question-area, .result { min-height: auto; }
+      .question-area { padding-top: 23px; }
+      .result { padding: 27px 0 4px; }
+      .source-note { margin-top: 14px; }
+    }
+    @media (max-width: 460px) {
+      .masthead { align-items: flex-start; }
+      .brand { font-size: 11px; }
+      .topic-chip { max-width: 140px; text-align: center; font-size: 10px; }
+      .intro p { font-size: 14px; }
+      .status-row { margin-bottom: 9px; }
+      .answer { padding: 12px; gap: 10px; }
+      .answer-copy { font-size: 13px; }
+      .controls { justify-content: stretch; }
+      .controls .primary { justify-content: center; width: 100%; }
+      .result-details { gap: 15px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="masthead">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 18.5V5.8c0-.7.6-1.3 1.3-1.3H19v13.7H5.3c-.7 0-1.3.6-1.3 1.3Zm0 0c0 .7.6 1.3 1.3 1.3H19M8 8h7M8 11h7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        Minigame kiến thức
+      </div>
+    </header>
+
+    <section class="intro" aria-labelledby="page-title">
+      <h1 id="page-title">KINH TẾ THỊ TRƯỜNG ĐỊNH HƯỚNG XHCN Ở VIỆT NAM</h1>
+    </section>
+
+    <section class="game-shell" aria-label="Trò chơi trắc nghiệm">
+      <div class="main-panel">
+        <div class="status-row" id="status-row">
+          <div class="question-count" id="question-count"><strong>Câu 1</strong> / 15</div>
+          <div class="live-score" aria-live="polite"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2L12 17.3l-5.6 2.9 1.1-6.2L3 9.6l6.2-.9L12 3Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg><span id="live-score">0 điểm</span></div>
+        </div>
+        <div class="progress-track" id="progress-track" role="progressbar" aria-label="Tiến độ trò chơi" aria-valuemin="0" aria-valuemax="15" aria-valuenow="0"><div class="progress-fill" id="progress-fill"></div></div>
+
+        <div class="question-area" id="question-area">
+          <div class="question-label"><span class="dot"></span><span id="question-category">Nắm vững khái niệm</span></div>
+          <h2 id="question-text" tabindex="-1"></h2>
+          <div class="answers" id="answers" role="group" aria-label="Chọn một đáp án"></div>
+          <div class="feedback" id="feedback" aria-live="polite">
+            <div class="feedback-title" id="feedback-title"></div>
+            <p id="feedback-copy"></p>
+          </div>
+          <div class="controls"><button class="primary" id="confirm-button" type="button" disabled>Xác nhận đáp án <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11m-4-4 4 4-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+        </div>
+
+        <section class="result" id="result" aria-labelledby="result-title" aria-live="polite">
+          <div class="result-seal" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2L12 17.3l-5.6 2.9 1.1-6.2L3 9.6l6.2-.9L12 3Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="m9.3 12.1 1.8 1.8 3.8-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <h2 id="result-title">Bạn đã hoàn thành!</h2>
+          <p class="result-lead" id="result-lead"></p>
+          <div class="result-score"><strong id="final-score">0</strong><span>/ 15 câu đúng</span></div>
+          <div class="result-meter" aria-hidden="true"><div id="result-meter-fill"></div></div>
+          <div class="result-details"><span>Đúng: <strong id="right-count">0</strong></span><span>Cần ôn thêm: <strong id="wrong-count">0</strong></span></div>
+          <div class="controls result-controls"><button class="primary" id="restart-button" type="button">Chơi lại từ đầu <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M16.2 8A6.3 6.3 0 1 0 16 12m.2-4V4.6M16.2 8h-3.4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+        </section>
+      </div>
+
+    </section>
+  </main>
+
+  <script>
+    const questions = [
+      {
+        category: "Nắm vững khái niệm",
+        text: "Kinh tế thị trường định hướng xã hội chủ nghĩa ở Việt Nam được hiểu như thế nào?",
+        options: [
+          "Nền kinh tế vận hành theo các quy luật thị trường, đồng thời hướng tới dân giàu, nước mạnh, dân chủ, công bằng, văn minh; có sự điều tiết của Nhà nước dưới sự lãnh đạo của Đảng Cộng sản Việt Nam.",
+          "Nền kinh tế trong đó Nhà nước quyết định toàn bộ giá cả, sản lượng và hoạt động của mọi doanh nghiệp.",
+          "Nền kinh tế chỉ thừa nhận sở hữu nhà nước và loại bỏ các quan hệ trao đổi trên thị trường.",
+          "Nền kinh tế ưu tiên tăng trưởng bằng mọi giá, còn các mục tiêu xã hội được thực hiện sau khi đã phát triển xong."
+        ],
+        correct: 0,
+        explanation: "Mô hình này vừa vận hành theo các quy luật của thị trường, vừa hướng tới hệ giá trị xã hội chủ nghĩa. Nhà nước điều tiết nền kinh tế dưới sự lãnh đạo của Đảng Cộng sản Việt Nam."
+      },
+      {
+        category: "Mục tiêu phát triển",
+        text: "Mục tiêu cốt lõi của kinh tế thị trường định hướng xã hội chủ nghĩa ở Việt Nam là gì?",
+        options: [
+          "Tối đa hóa lợi nhuận của doanh nghiệp nhà nước trong mọi ngành nghề.",
+          "Phát triển lực lượng sản xuất, xây dựng cơ sở vật chất – kỹ thuật của chủ nghĩa xã hội, nâng cao đời sống nhân dân và hướng tới dân giàu, nước mạnh, dân chủ, công bằng, văn minh.",
+          "Thay thế toàn bộ cơ chế thị trường bằng kế hoạch hóa tập trung.",
+          "Chỉ tập trung mở rộng sản lượng công nghiệp, không gắn với mục tiêu xã hội."
+        ],
+        correct: 1,
+        explanation: "Mục tiêu bao gồm phát triển lực lượng sản xuất và nâng cao đời sống nhân dân, đồng thời xây dựng các giá trị dân giàu, nước mạnh, dân chủ, công bằng, văn minh."
+      },
+      {
+        category: "Tính tất yếu khách quan",
+        text: "Vì sao phát triển kinh tế thị trường định hướng xã hội chủ nghĩa được xem là phù hợp với Việt Nam?",
+        options: [
+          "Vì mọi quốc gia đều phải áp dụng cùng một mô hình thị trường.",
+          "Vì kinh tế thị trường loại bỏ hoàn toàn các hạn chế và mâu thuẫn trong phát triển.",
+          "Vì các điều kiện cho kinh tế hàng hóa và thị trường tồn tại khách quan; cơ chế thị trường cũng thúc đẩy lực lượng sản xuất và phân bổ nguồn lực hiệu quả.",
+          "Vì Việt Nam không cần điều tiết nền kinh tế khi đã có thị trường."
+        ],
+        correct: 2,
+        explanation: "Ở Việt Nam, các điều kiện hình thành kinh tế thị trường đang tồn tại khách quan. Cơ chế thị trường là phương thức phân bổ nguồn lực hiệu quả và tạo động lực phát triển lực lượng sản xuất."
+      },
+      {
+        category: "Sở hữu và thành phần kinh tế",
+        text: "Đặc điểm nào đúng về sở hữu và các thành phần kinh tế trong mô hình này?",
+        options: [
+          "Chỉ kinh tế nhà nước được tham gia thị trường; các thành phần khác hoạt động ngoài khuôn khổ pháp luật.",
+          "Có nhiều hình thức sở hữu và thành phần kinh tế; các thành phần bình đẳng trước pháp luật, hợp tác và cạnh tranh lành mạnh, trong đó kinh tế nhà nước giữ vai trò chủ đạo.",
+          "Mọi thành phần kinh tế đều có vai trò và phạm vi hoạt động hoàn toàn giống nhau.",
+          "Kinh tế tư nhân được khuyến khích nhưng không được tham gia cạnh tranh với doanh nghiệp nhà nước."
+        ],
+        correct: 1,
+        explanation: "Nền kinh tế có nhiều hình thức sở hữu, nhiều thành phần kinh tế. Các thành phần là bộ phận của nền kinh tế quốc dân, bình đẳng trước pháp luật; kinh tế nhà nước giữ vai trò chủ đạo."
+      },
+      {
+        category: "Vai trò của Nhà nước",
+        text: "Nhà nước quản lý nền kinh tế thị trường định hướng xã hội chủ nghĩa chủ yếu bằng cách nào?",
+        options: [
+          "Thay thế các chủ thể kinh tế để trực tiếp quyết định mọi giao dịch.",
+          "Đứng ngoài thị trường và không sử dụng công cụ điều tiết.",
+          "Thông qua pháp luật, chiến lược, quy hoạch, kế hoạch và chính sách; tôn trọng nguyên tắc thị trường, khắc phục khuyết tật và bảo đảm các cân đối vĩ mô.",
+          "Chỉ sử dụng mệnh lệnh hành chính, không cần khuôn khổ pháp luật."
+        ],
+        correct: 2,
+        explanation: "Nhà nước quản lý bằng pháp luật và các công cụ chính sách trên cơ sở tôn trọng nguyên tắc thị trường; đồng thời khắc phục khuyết tật của thị trường, giữ ổn định các cân đối vĩ mô và hỗ trợ các nhóm dễ bị tổn thương."
+      },
+      {
+        category: "Quan hệ phân phối",
+        text: "Cách phân phối nào phản ánh đúng định hướng xã hội chủ nghĩa của nền kinh tế?",
+        options: [
+          "Phân phối đầu vào bảo đảm cơ hội tiếp cận công bằng; phân phối đầu ra chủ yếu theo kết quả lao động, hiệu quả kinh tế, đóng góp vốn và nguồn lực khác, cùng hệ thống an sinh xã hội.",
+          "Chia đều mọi nguồn lực và kết quả cho tất cả mọi người, không xét đóng góp hay hiệu quả.",
+          "Phân phối toàn bộ kết quả theo vốn góp, không có vai trò của lao động hoặc phúc lợi xã hội.",
+          "Chỉ phân phối theo nhu cầu và không quan tâm đến khả năng của nền kinh tế."
+        ],
+        correct: 0,
+        explanation: "Cách phân phối này bảo đảm công bằng trong tiếp cận các yếu tố và cơ hội phát triển; kết quả chủ yếu căn cứ vào lao động, hiệu quả kinh tế, đóng góp vốn và nguồn lực khác, kết hợp an sinh và phúc lợi xã hội."
+      },
+      {
+        category: "Tăng trưởng và công bằng",
+        text: "Quan điểm nào đúng về quan hệ giữa tăng trưởng kinh tế với tiến bộ và công bằng xã hội?",
+        options: [
+          "Chỉ thực hiện công bằng xã hội sau khi nền kinh tế đã đạt mức phát triển cao.",
+          "Có thể hy sinh công bằng xã hội nếu việc đó giúp tăng trưởng nhanh hơn.",
+          "Gắn tiến bộ và công bằng xã hội với từng chính sách, chiến lược và giai đoạn phát triển; không đồng nghĩa với cào bằng hay chia đều bất kể hiệu quả.",
+          "Công bằng xã hội chỉ là công cụ hỗ trợ tăng trưởng, không phải mục tiêu phát triển."
+        ],
+        correct: 2,
+        explanation: "Tiến bộ và công bằng xã hội cần được thực hiện trong từng chính sách và từng giai đoạn, không chờ đến khi kinh tế phát triển cao. Tuy vậy, công bằng không có nghĩa là bình quân, chia đều bất kể đóng góp và hiệu quả."
+      },
+      {
+        category: "Hiểu về thể chế",
+        text: "Thể chế kinh tế thị trường định hướng xã hội chủ nghĩa gồm những yếu tố cơ bản nào?",
+        options: [
+          "Chỉ gồm các doanh nghiệp và những giao dịch mua bán trên thị trường.",
+          "Hệ thống đường lối, luật pháp, chính sách và cơ chế vận hành, điều chỉnh hoạt động cùng quan hệ lợi ích của các chủ thể kinh tế.",
+          "Chỉ gồm các quyết định điều hành ngắn hạn của cơ quan quản lý.",
+          "Các tập quán kinh doanh không cần được pháp luật hoặc Nhà nước thừa nhận."
+        ],
+        correct: 1,
+        explanation: "Thể chế kinh tế là hệ thống quy tắc, luật pháp, bộ máy quản lý và cơ chế vận hành điều chỉnh hành vi kinh tế. Với mô hình định hướng xã hội chủ nghĩa, thể chế còn xác lập mục tiêu và phương thức hoạt động phù hợp với định hướng đó."
+      },
+      {
+        category: "Hoàn thiện các thị trường",
+        text: "Một nội dung trọng tâm để hoàn thiện thể chế kinh tế thị trường là gì?",
+        options: [
+          "Phát triển đồng bộ các yếu tố thị trường và các loại thị trường, bảo đảm chúng vận hành thông suốt.",
+          "Chỉ phát triển thị trường hàng hóa, hạn chế thị trường vốn, công nghệ và lao động.",
+          "Ấn định mọi mức giá và loại bỏ cạnh tranh giữa các chủ thể kinh tế.",
+          "Chờ thị trường tự hình thành mà không cần hoàn thiện quy định về giá, cạnh tranh và chất lượng."
+        ],
+        correct: 0,
+        explanation: "Cần hoàn thiện thể chế cho các yếu tố thị trường như hàng hóa, giá cả, cạnh tranh, cung cầu; đồng thời phát triển đồng bộ các thị trường cơ bản như hàng hóa, vốn, công nghệ và sức lao động."
+      },
+      {
+        category: "Hội nhập kinh tế quốc tế",
+        text: "Định hướng nào phù hợp khi hoàn thiện thể chế về hội nhập kinh tế quốc tế?",
+        options: [
+          "Tập trung hợp tác với một vài thị trường để tránh phải điều chỉnh trong nước.",
+          "Đa phương hóa, đa dạng hóa hợp tác; nâng cao năng lực cạnh tranh và chủ động ứng phó diễn biến bất lợi, bảo vệ lợi ích quốc gia – dân tộc.",
+          "Chỉ ưu tiên cam kết quốc tế, không cần quan tâm đến năng lực doanh nghiệp trong nước.",
+          "Hạn chế mọi quan hệ kinh tế quốc tế để tránh phát sinh tranh chấp."
+        ],
+        correct: 1,
+        explanation: "Hội nhập kinh tế quốc tế cần theo hướng đa phương hóa, đa dạng hóa, tránh lệ thuộc vào một số ít thị trường, nâng cao năng lực cạnh tranh trong nước và xây dựng cơ chế ứng phó với diễn biến bất lợi trên thị trường thế giới."
+      },
+      {
+        category: "Sự cần thiết hoàn thiện thể chế",
+        text: "Đâu là lý do quan trọng khiến Việt Nam cần tiếp tục hoàn thiện thể chế kinh tế thị trường định hướng xã hội chủ nghĩa?",
+        options: [
+          "Thể chế đã đồng bộ và các loại thị trường đã phát triển hoàn chỉnh nên cần chuyển sang mô hình khác.",
+          "Thể chế còn chưa đồng bộ, chưa đầy đủ và hiệu lực thực thi chưa cao; một số yếu tố và loại thị trường còn phát triển sơ khai.",
+          "Nhà nước không còn vai trò trong xây dựng và thực thi thể chế kinh tế.",
+          "Cần loại bỏ mọi quy tắc để các thị trường tự vận hành hoàn toàn."
+        ],
+        correct: 1,
+        explanation: "Thể chế còn chưa đồng bộ, quy định chưa đầy đủ, hiệu quả thực thi chưa cao; các yếu tố và loại thị trường cũng cần tiếp tục phát triển."
+      },
+      {
+        category: "Hoàn thiện thể chế về sở hữu",
+        text: "Việc thể chế hóa đầy đủ quyền tài sản cần bao gồm những quyền nào?",
+        options: [
+          "Quyền sở hữu, quyền sử dụng, quyền định đoạt và quyền hưởng lợi từ tài sản.",
+          "Chỉ quyền sở hữu tài sản, không bao gồm quyền sử dụng hay hưởng lợi.",
+          "Quyền sử dụng tài sản công, nhưng không áp dụng cho tổ chức và cá nhân.",
+          "Quyền chuyển nhượng tài sản mà không cần quy định về nghĩa vụ hay trách nhiệm."
+        ],
+        correct: 0,
+        explanation: "Nội dung hoàn thiện thể chế về sở hữu yêu cầu thể chế hóa đầy đủ quyền sở hữu, quyền sử dụng, quyền định đoạt và quyền hưởng lợi từ tài sản; đồng thời bảo đảm công khai, minh bạch và thực thi hiệu quả."
+      },
+      {
+        category: "Phát triển các thành phần kinh tế",
+        text: "Chính sách nào góp phần bảo đảm các loại hình doanh nghiệp hoạt động bình đẳng trong nền kinh tế thị trường?",
+        options: [
+          "Áp dụng điều kiện kinh doanh riêng cho từng hình thức sở hữu để hạn chế cạnh tranh.",
+          "Dành quyền tự do kinh doanh cho một số thành phần kinh tế nhất định.",
+          "Thực hiện mặt bằng pháp lý và điều kiện kinh doanh thống nhất, bảo đảm quyền tự do kinh doanh và cạnh tranh lành mạnh theo pháp luật.",
+          "Duy trì các rào cản đầu tư để bảo vệ doanh nghiệp đã hoạt động lâu năm."
+        ],
+        correct: 2,
+        explanation: "Cần áp dụng nhất quán mặt bằng pháp lý và điều kiện kinh doanh cho các loại hình doanh nghiệp, không phân biệt sở hữu; bảo đảm quyền tự do kinh doanh và cạnh tranh theo pháp luật."
+      },
+      {
+        category: "Vai trò của doanh nghiệp nhà nước",
+        text: "Theo nội dung hoàn thiện thể chế, doanh nghiệp nhà nước nên tập trung vào đâu?",
+        options: [
+          "Mọi lĩnh vực có khả năng sinh lời, kể cả nơi khu vực tư nhân đang đầu tư hiệu quả.",
+          "Các lĩnh vực then chốt, thiết yếu, địa bàn chiến lược, quốc phòng – an ninh và lĩnh vực mà doanh nghiệp thuộc thành phần khác không đầu tư.",
+          "Chủ yếu các hoạt động thương mại nhỏ lẻ và dịch vụ tiêu dùng phổ thông.",
+          "Chỉ các lĩnh vực do cơ quan nhà nước trực tiếp quản lý hằng ngày."
+        ],
+        correct: 1,
+        explanation: "Doanh nghiệp nhà nước tập trung vào lĩnh vực then chốt, thiết yếu, địa bàn chiến lược, quốc phòng – an ninh và những lĩnh vực mà các thành phần kinh tế khác không đầu tư; đồng thời cần quản lý chặt chẽ vốn nhà nước."
+      },
+      {
+        category: "Nâng cao năng lực hệ thống chính trị",
+        text: "Hoàn thiện thể chế để nâng cao năng lực hệ thống chính trị cần phát huy đồng thời vai trò nào?",
+        options: [
+          "Vai trò lãnh đạo của Đảng, vai trò xây dựng và thực hiện thể chế kinh tế của Nhà nước, cùng quyền làm chủ của nhân dân.",
+          "Chỉ vai trò quản lý của Nhà nước, tách khỏi sự tham gia và giám sát của nhân dân.",
+          "Chỉ vai trò của các doanh nghiệp lớn trong việc xây dựng luật kinh tế.",
+          "Chuyển toàn bộ việc xây dựng thể chế cho các tổ chức quốc tế."
+        ],
+        correct: 0,
+        explanation: "Nội dung này hướng tới nâng cao năng lực lãnh đạo của Đảng, phát huy vai trò của Nhà nước trong xây dựng và thực hiện thể chế kinh tế, đồng thời bảo đảm vai trò làm chủ của nhân dân."
+      }
+    ];
+
+    const letters = ["A", "B", "C", "D"];
+    let current = 0;
+    let selected = null;
+    let locked = false;
+    let score = 0;
+
+    const countEl = document.getElementById("question-count");
+    const progressFill = document.getElementById("progress-fill");
+    const progressTrack = document.getElementById("progress-track");
+    const categoryEl = document.getElementById("question-category");
+    const questionText = document.getElementById("question-text");
+    const answersEl = document.getElementById("answers");
+    const feedback = document.getElementById("feedback");
+    const feedbackTitle = document.getElementById("feedback-title");
+    const feedbackCopy = document.getElementById("feedback-copy");
+    const confirmButton = document.getElementById("confirm-button");
+    const questionArea = document.getElementById("question-area");
+    const result = document.getElementById("result");
+
+    function updateProgress(completed) {
+      const percent = Math.round(completed / questions.length * 100);
+      progressFill.style.width = `${percent}%`;
+      progressTrack.setAttribute("aria-valuenow", String(completed));
+    }
+
+    function renderQuestion() {
+      const q = questions[current];
+      selected = null;
+      locked = false;
+      countEl.innerHTML = `<strong>Câu ${current + 1}</strong> / ${questions.length}`;
+      categoryEl.textContent = q.category;
+      questionText.textContent = q.text;
+      answersEl.replaceChildren();
+      feedback.className = "feedback";
+      feedbackTitle.textContent = "";
+      feedbackCopy.textContent = "";
+      confirmButton.disabled = true;
+      confirmButton.innerHTML = 'Xác nhận đáp án <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11m-4-4 4 4-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+      q.options.forEach((option, index) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "answer";
+        button.setAttribute("aria-pressed", "false");
+        button.innerHTML = `<span class="answer-key">${letters[index]}</span><span class="answer-copy"></span>`;
+        button.querySelector(".answer-copy").textContent = option;
+        button.addEventListener("click", () => selectAnswer(index));
+        answersEl.append(button);
+      });
+      updateProgress(current);
+      document.getElementById("live-score").textContent = `${score} điểm`;
+      questionText.focus({preventScroll: true});
+    }
+
+    function selectAnswer(index) {
+      if (locked) return;
+      selected = index;
+      [...answersEl.children].forEach((button, i) => button.setAttribute("aria-pressed", String(i === index)));
+      confirmButton.disabled = false;
+    }
+
+    function confirmAnswer() {
+      if (selected === null || locked) return;
+      locked = true;
+      const q = questions[current];
+      const correct = selected === q.correct;
+      if (correct) score += 1;
+      [...answersEl.children].forEach((button, i) => {
+        button.disabled = true;
+        if (i === q.correct) button.classList.add("is-correct");
+        if (i === selected && !correct) button.classList.add("is-wrong");
+      });
+      feedback.className = `feedback visible ${correct ? "correct" : "incorrect"}`;
+      feedbackTitle.textContent = correct ? "✓  Chính xác!" : `Đáp án đúng: ${letters[q.correct]}`;
+      feedbackCopy.textContent = q.explanation;
+      document.getElementById("live-score").textContent = `${score} điểm`;
+      updateProgress(current + 1);
+      confirmButton.innerHTML = current === questions.length - 1
+        ? 'Xem kết quả <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11m-4-4 4 4-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+        : 'Câu tiếp theo <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11m-4-4 4 4-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    }
+
+    function showResult() {
+      questionArea.hidden = true;
+      result.classList.add("visible");
+      countEl.innerHTML = `<strong>Hoàn thành</strong> · ${questions.length} / ${questions.length}`;
+      document.getElementById("live-score").textContent = `${score} điểm`;
+      document.getElementById("final-score").textContent = String(score);
+      document.getElementById("right-count").textContent = String(score);
+      document.getElementById("wrong-count").textContent = String(questions.length - score);
+      document.getElementById("result-meter-fill").style.width = `${score / questions.length * 100}%`;
+      const lead = score === questions.length
+        ? "Xuất sắc! Bạn đã nắm rất chắc những nội dung trọng tâm."
+        : score >= 12
+          ? "Bạn đã hiểu tốt phần lớn nội dung. Hãy xem lại những câu cần ôn thêm để củng cố kiến thức."
+          : score >= 7
+            ? "Bạn đã có nền tảng ban đầu. Đọc lại phần giải thích rồi thử sức thêm một lượt nhé."
+            : "Hãy xem lại từng phần giải thích để hệ thống hóa các ý chính, rồi chơi lại khi sẵn sàng. ";
+      document.getElementById("result-lead").textContent = lead;
+      document.getElementById("restart-button").focus({preventScroll: true});
+    }
+
+    confirmButton.addEventListener("click", () => {
+      if (!locked) {
+        confirmAnswer();
+        return;
+      }
+      if (current === questions.length - 1) {
+        showResult();
+        return;
+      }
+      current += 1;
+      renderQuestion();
+    });
+
+    document.getElementById("restart-button").addEventListener("click", () => {
+      current = 0;
+      score = 0;
+      result.classList.remove("visible");
+      questionArea.hidden = false;
+      renderQuestion();
+    });
+
+    renderQuestion();
+  </script>
+</body>
+</html>

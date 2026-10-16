@@ -1,0 +1,496 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f4ef">
+  <title>QUAN HỆ LỢI ÍCH KINH TẾ Ở VIỆT NAM</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #172d36;
+      --muted: #62747a;
+      --paper: #fffefa;
+      --canvas: #f4f2ec;
+      --line: #e6e5dc;
+      --teal: #0d756d;
+      --teal-dark: #095a55;
+      --teal-soft: #e8f4f1;
+      --gold: #e4b64c;
+      --green: #18744e;
+      --green-soft: #e8f5ed;
+      --red: #a64439;
+      --red-soft: #fbefec;
+      --shadow: 0 22px 60px rgba(26, 49, 54, .09), 0 2px 8px rgba(26, 49, 54, .04);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(ellipse at 86% 5%, rgba(228, 182, 76, .15), transparent 26rem),
+        radial-gradient(ellipse at 4% 80%, rgba(13, 117, 109, .08), transparent 27rem),
+        var(--canvas);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+    button { font: inherit; }
+    .page { width: min(100% - 36px, 1050px); margin: 0 auto; padding: 34px 0 28px; }
+    .masthead { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 25px; }
+    .brand { display: inline-flex; gap: 11px; align-items: center; font-size: 13px; font-weight: 750; letter-spacing: .055em; text-transform: uppercase; color: #426067; }
+    .brand-mark { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 12px; color: white; background: var(--teal); box-shadow: 0 5px 14px rgba(13, 117, 109, .2); }
+    .brand-mark svg { width: 19px; height: 19px; }
+    .topic-chip { border: 1px solid #e1ded2; border-radius: 999px; padding: 7px 12px; color: #6d7772; background: rgba(255,255,255,.55); font-size: 12px; font-weight: 650; }
+    .intro { margin: 0 auto 24px; max-width: 760px; text-align: center; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 7px; margin-bottom: 9px; color: var(--teal); font-size: 12px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+    .eyebrow::before, .eyebrow::after { content: ""; width: 17px; height: 1px; background: #96c2b9; }
+    h1 { margin: 0; font-family: Georgia, "Times New Roman", serif; font-size: clamp(29px, 5vw, 44px); letter-spacing: -.035em; line-height: 1.13; font-weight: 700; }
+    .intro p { max-width: 615px; margin: 12px auto 0; color: var(--muted); font-size: 15px; }
+    .game-shell { display: grid; grid-template-columns: minmax(0, 1fr); border: 1px solid rgba(221, 221, 210, .85); border-radius: 22px; overflow: hidden; background: var(--paper); box-shadow: var(--shadow); }
+    .main-panel { padding: 30px clamp(22px, 4vw, 42px) 32px; min-width: 0; }
+    .status-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 11px; }
+    .question-count { color: var(--muted); font-size: 13px; font-weight: 700; }
+    .question-count strong { color: var(--ink); font-size: 14px; }
+    .live-score { display: flex; align-items: center; gap: 7px; color: #7e692f; font-size: 13px; font-weight: 750; }
+    .live-score svg { width: 17px; height: 17px; }
+    .progress-track { width: 100%; height: 7px; overflow: hidden; border-radius: 99px; background: #ecece4; }
+    .progress-fill { width: 0; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--teal), #4ca78c); transition: width .35s ease; }
+    .question-area { min-height: 454px; padding-top: 27px; }
+    .question-label { display: inline-flex; align-items: center; gap: 7px; color: #a27b21; font-size: 11px; font-weight: 800; letter-spacing: .13em; text-transform: uppercase; }
+    .question-label .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 0 4px #f9f1d9; }
+    h2 { margin: 13px 0 21px; font-family: Georgia, "Times New Roman", serif; font-size: clamp(21px, 3vw, 27px); line-height: 1.35; letter-spacing: -.018em; }
+    .question-area h2 { font-family: "Segoe UI", Arial, sans-serif; font-weight: 700; line-height: 1.45; letter-spacing: -.025em; }
+    .answers { display: grid; gap: 10px; }
+    .answer {
+      display: flex; gap: 13px; align-items: flex-start; width: 100%; padding: 13px 15px;
+      color: var(--ink); text-align: left; border: 1px solid #e6e8e1; border-radius: 12px; background: white;
+      cursor: pointer; transition: border-color .18s ease, background .18s ease, box-shadow .18s ease, transform .18s ease;
+    }
+    .answer:hover:not(:disabled) { border-color: #8fbeb5; transform: translateY(-1px); }
+    .answer:focus-visible, .primary:focus-visible, .secondary:focus-visible { outline: 3px solid rgba(13, 117, 109, .25); outline-offset: 2px; }
+    .answer[aria-pressed="true"] { border-color: var(--teal); background: #f2faf8; box-shadow: inset 0 0 0 1px var(--teal); }
+    .answer:disabled { cursor: default; }
+    .answer-key { display: grid; flex: 0 0 28px; place-items: center; width: 28px; height: 28px; margin-top: -1px; border: 1px solid #dfe4df; border-radius: 8px; color: #5b6e6e; background: #fafbf8; font-size: 12px; font-weight: 800; }
+    .answer[aria-pressed="true"] .answer-key { border-color: var(--teal); color: white; background: var(--teal); }
+    .answer-copy { padding-top: 2px; font-family: "Segoe UI", Arial, sans-serif; font-size: 14px; line-height: 1.5; }
+    .answer.is-correct { border-color: #8cc7a5; background: var(--green-soft); }
+    .answer.is-correct .answer-key { border-color: var(--green); color: #fff; background: var(--green); }
+    .answer.is-wrong { border-color: #e0a9a0; background: var(--red-soft); }
+    .answer.is-wrong .answer-key { border-color: var(--red); color: #fff; background: var(--red); }
+    .feedback { display: none; margin-top: 17px; padding: 15px 16px; border-radius: 12px; animation: appear .25s ease both; }
+    .feedback.visible { display: block; }
+    .feedback.correct { border: 1px solid #c8e5d3; background: #f1faf4; }
+    .feedback.incorrect { border: 1px solid #f0d3cc; background: #fff7f4; }
+    .feedback-title { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; font-size: 14px; font-weight: 800; }
+    .feedback.correct .feedback-title { color: var(--green); }
+    .feedback.incorrect .feedback-title { color: var(--red); }
+    .feedback p { margin: 0; color: #4f6262; font-size: 13px; line-height: 1.55; }
+    .controls { display: flex; justify-content: flex-end; gap: 10px; padding-top: 20px; }
+    .primary, .secondary { min-height: 44px; padding: 0 19px; border: 0; border-radius: 11px; font-size: 14px; font-weight: 750; cursor: pointer; transition: transform .18s ease, background .18s ease, opacity .18s ease; }
+    .primary { display: inline-flex; align-items: center; gap: 9px; color: white; background: var(--teal); box-shadow: 0 6px 14px rgba(13, 117, 109, .17); }
+    .primary:hover:not(:disabled) { background: var(--teal-dark); transform: translateY(-1px); }
+    .primary:disabled { opacity: .42; cursor: not-allowed; box-shadow: none; }
+    .primary svg { width: 16px; height: 16px; }
+    .secondary { border: 1px solid #dfe3dc; color: #496064; background: transparent; }
+    .secondary:hover { background: #eff2ed; }
+    .source-note { margin: 19px 2px 0; color: #8a928b; text-align: center; font-size: 11px; }
+    .result { display: none; min-height: 454px; padding: 34px 0 10px; text-align: center; animation: appear .3s ease both; }
+    .result.visible { display: block; }
+    .result-seal { display: grid; place-items: center; width: 68px; height: 68px; margin: 0 auto 15px; border: 1px solid #f0e1b5; border-radius: 22px; color: #98731c; background: #fbf4df; }
+    .result-seal svg { width: 31px; height: 31px; }
+    .result h2 { margin: 0 0 8px; font-size: 32px; }
+    .result-lead { max-width: 475px; margin: 0 auto; color: var(--muted); }
+    .result-score { display: flex; align-items: baseline; justify-content: center; gap: 7px; margin: 22px 0 17px; }
+    .result-score strong { color: var(--teal-dark); font-family: Georgia, "Times New Roman", serif; font-size: 54px; line-height: 1; }
+    .result-score span { color: #788581; font-size: 14px; font-weight: 700; }
+    .result-meter { max-width: 350px; height: 10px; margin: 0 auto 24px; overflow: hidden; border-radius: 99px; background: #ebede6; }
+    .result-meter div { width: 0; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #dca83a, #0d8a75); transition: width .5s ease; }
+    .result-controls { justify-content: center; padding-top: 0; }
+    .result-details { display: flex; justify-content: center; gap: 24px; margin-bottom: 24px; color: #71807c; font-size: 12px; }
+    .result-details strong { color: var(--ink); }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+    @keyframes appear { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 760px) {
+      .page { width: min(100% - 24px, 620px); padding-top: 20px; }
+      .game-shell { grid-template-columns: 1fr; border-radius: 18px; }
+      .main-panel { padding: 24px 21px; }
+      .question-area, .result { min-height: auto; }
+      .question-area { padding-top: 23px; }
+      .result { padding: 27px 0 4px; }
+      .source-note { margin-top: 14px; }
+    }
+    @media (max-width: 460px) {
+      .masthead { align-items: flex-start; }
+      .brand { font-size: 11px; }
+      .topic-chip { max-width: 140px; text-align: center; font-size: 10px; }
+      .intro p { font-size: 14px; }
+      .status-row { margin-bottom: 9px; }
+      .answer { padding: 12px; gap: 10px; }
+      .answer-copy { font-size: 13px; }
+      .controls { justify-content: stretch; }
+      .controls .primary { justify-content: center; width: 100%; }
+      .result-details { gap: 15px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="masthead">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 18.5V5.8c0-.7.6-1.3 1.3-1.3H19v13.7H5.3c-.7 0-1.3.6-1.3 1.3Zm0 0c0 .7.6 1.3 1.3 1.3H19M8 8h7M8 11h7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        Minigame kiến thức
+      </div>
+    </header>
+
+    <section class="intro" aria-labelledby="page-title">
+      <h1 id="page-title">QUAN HỆ LỢI ÍCH KINH TẾ Ở VIỆT NAM</h1>
+    </section>
+
+    <section class="game-shell" aria-label="Trò chơi trắc nghiệm">
+      <div class="main-panel">
+        <div class="status-row" id="status-row">
+          <div class="question-count" id="question-count"><strong>Câu 1</strong> / 15</div>
+          <div class="live-score" aria-live="polite"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2L12 17.3l-5.6 2.9 1.1-6.2L3 9.6l6.2-.9L12 3Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg><span id="live-score">0 điểm</span></div>
+        </div>
+        <div class="progress-track" id="progress-track" role="progressbar" aria-label="Tiến độ trò chơi" aria-valuemin="0" aria-valuemax="15" aria-valuenow="0"><div class="progress-fill" id="progress-fill"></div></div>
+
+        <div class="question-area" id="question-area">
+          <div class="question-label"><span class="dot"></span><span id="question-category">Nắm vững khái niệm</span></div>
+          <h2 id="question-text" tabindex="-1"></h2>
+          <div class="answers" id="answers" role="group" aria-label="Chọn một đáp án"></div>
+          <div class="feedback" id="feedback" aria-live="polite">
+            <div class="feedback-title" id="feedback-title"></div>
+            <p id="feedback-copy"></p>
+          </div>
+          <div class="controls"><button class="primary" id="confirm-button" type="button" disabled>Xác nhận đáp án <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11m-4-4 4 4-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+        </div>
+
+        <section class="result" id="result" aria-labelledby="result-title" aria-live="polite">
+          <div class="result-seal" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2L12 17.3l-5.6 2.9 1.1-6.2L3 9.6l6.2-.9L12 3Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="m9.3 12.1 1.8 1.8 3.8-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <h2 id="result-title">Bạn đã hoàn thành!</h2>
+          <p class="result-lead" id="result-lead"></p>
+          <div class="result-score"><strong id="final-score">0</strong><span>/ 15 câu đúng</span></div>
+          <div class="result-meter" aria-hidden="true"><div id="result-meter-fill"></div></div>
+          <div class="result-details"><span>Đúng: <strong id="right-count">0</strong></span><span>Cần ôn thêm: <strong id="wrong-count">0</strong></span></div>
+          <div class="controls result-controls"><button class="primary" id="restart-button" type="button">Chơi lại từ đầu <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M16.2 8A6.3 6.3 0 1 0 16 12m.2-4V4.6M16.2 8h-3.4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+        </section>
+      </div>
+
+    </section>
+    <p class="source-note">15 câu hỏi trắc nghiệm · Chọn đáp án, xem giải thích và theo dõi điểm số.</p>
+  </main>
+
+  <script>
+    const questions = [
+      {
+        category: "Khái niệm lợi ích kinh tế",
+        text: "Lợi ích kinh tế được hiểu như thế nào?",
+        options: [
+          "Lợi ích vật chất thu được khi con người thực hiện các hoạt động kinh tế.",
+          "Mọi sự thỏa mãn tinh thần, không liên quan đến hoạt động kinh tế.",
+          "Các quyền pháp lý của Nhà nước đối với tài sản công.",
+          "Tổng hợp các mục tiêu chính trị của một tổ chức xã hội."
+        ],
+        correct: 0,
+        explanation: "Lợi ích kinh tế là lợi ích vật chất mà con người thu được khi tham gia hoạt động kinh tế; nó gắn với việc thỏa mãn nhu cầu vật chất."
+      },
+      {
+        category: "Bản chất lợi ích kinh tế",
+        text: "Xét về bản chất, lợi ích kinh tế phản ánh điều gì?",
+        options: [
+          "Mức độ phát triển văn hóa của một cộng đồng, không phụ thuộc quan hệ kinh tế.",
+          "Mục đích và động cơ của các quan hệ giữa những chủ thể trong nền sản xuất xã hội.",
+          "Chỉ khả năng tiêu dùng hàng hóa của từng cá nhân.",
+          "Các quy định hành chính áp dụng cho hoạt động sản xuất."
+        ],
+        correct: 1,
+        explanation: "Lợi ích kinh tế phản ánh mục đích và động cơ của các quan hệ giữa các chủ thể trong nền sản xuất xã hội."
+      },
+      {
+        category: "Biểu hiện lợi ích kinh tế",
+        text: "Đâu là cách mô tả đúng lợi ích kinh tế tiêu biểu của chủ doanh nghiệp và người lao động?",
+        options: [
+          "Chủ doanh nghiệp quan tâm đến tiền lương; người lao động quan tâm đến lợi nhuận.",
+          "Cả hai chỉ quan tâm đến quyền sở hữu tư liệu sản xuất.",
+          "Lợi ích của chủ doanh nghiệp thường thể hiện ở lợi nhuận, còn lợi ích của người lao động thể hiện ở thu nhập, trước hết là tiền lương và tiền thưởng.",
+          "Lợi ích của cả hai chỉ được đo bằng mức đóng thuế."
+        ],
+        correct: 2,
+        explanation: "Lợi ích kinh tế biểu hiện khác nhau tùy vai trò của chủ thể: lợi nhuận thường là lợi ích trọng tâm của chủ doanh nghiệp, còn thu nhập và tiền lương là lợi ích trực tiếp của người lao động."
+      },
+      {
+        category: "Vai trò của lợi ích kinh tế",
+        text: "Vì sao lợi ích kinh tế được xem là động lực trực tiếp của hoạt động kinh tế – xã hội?",
+        options: [
+          "Vì theo đuổi lợi ích chính đáng khuyến khích người lao động nâng cao tay nghề, doanh nghiệp cải thiện hiệu quả và chất lượng, qua đó thúc đẩy phát triển kinh tế.",
+          "Vì lợi ích cá nhân luôn quan trọng hơn lợi ích xã hội và không cần giới hạn.",
+          "Vì lợi ích kinh tế khiến các chủ thể không cần quan tâm đến nhu cầu của người tiêu dùng.",
+          "Vì mọi hoạt động kinh tế đều chỉ nhằm tạo lợi nhuận trong ngắn hạn."
+        ],
+        correct: 0,
+        explanation: "Khi theo đuổi lợi ích hợp pháp, người lao động có động lực làm việc và nâng cao tay nghề; doanh nghiệp có động lực sử dụng nguồn lực hiệu quả, cải tiến sản phẩm và đáp ứng nhu cầu."
+      },
+      {
+        category: "Lợi ích kinh tế và các lợi ích khác",
+        text: "Lợi ích kinh tế được thực hiện có ý nghĩa gì đối với các lợi ích chính trị, xã hội và văn hóa?",
+        options: [
+          "Thay thế hoàn toàn các lợi ích chính trị, xã hội và văn hóa.",
+          "Chỉ làm tăng lợi ích của một số chủ thể kinh doanh.",
+          "Không có tác động vì các nhóm lợi ích tồn tại độc lập.",
+          "Tạo điều kiện vật chất để hình thành và thực hiện các lợi ích khác của chủ thể xã hội."
+        ],
+        correct: 3,
+        explanation: "Việc thực hiện lợi ích kinh tế tạo ra điều kiện vật chất cần thiết để hình thành và thực hiện lợi ích chính trị, xã hội và văn hóa."
+      },
+      {
+        category: "Quan hệ lợi ích kinh tế",
+        text: "Quan hệ lợi ích kinh tế là gì?",
+        options: [
+          "Sự phân chia quyền lực chính trị giữa các cơ quan nhà nước.",
+          "Sự tương tác giữa các chủ thể kinh tế trong quá trình theo đuổi và thực hiện lợi ích kinh tế của họ.",
+          "Quan hệ trao đổi hàng hóa chỉ giữa người bán và người mua cuối cùng.",
+          "Mối quan hệ giữa thu nhập cá nhân và chi tiêu hộ gia đình בלבד."
+        ],
+        correct: 1,
+        explanation: "Quan hệ lợi ích kinh tế hình thành từ sự tương tác giữa các chủ thể khi họ tham gia hoạt động kinh tế và thực hiện lợi ích của mình. Quan hệ này gắn với trình độ lực lượng sản xuất và các quan hệ xã hội trong từng giai đoạn."
+      },
+      {
+        category: "Thống nhất và mâu thuẫn lợi ích",
+        text: "Ví dụ nào cho thấy lợi ích kinh tế của các chủ thể có thể thống nhất với nhau?",
+        options: [
+          "Doanh nghiệp làm hàng giả để tăng lợi nhuận, gây thiệt hại cho người tiêu dùng.",
+          "Người sử dụng lao động cắt xén tiền lương để tăng phần lợi nhuận của mình.",
+          "Doanh nghiệp nâng chất lượng sản phẩm, tăng hiệu quả kinh doanh; người lao động có việc làm và thu nhập ổn định, xã hội được hưởng lợi.",
+          "Các chủ thể trốn thuế để tăng thu nhập riêng."
+        ],
+        correct: 2,
+        explanation: "Khi hoạt động của doanh nghiệp vừa tạo hiệu quả và lợi nhuận, vừa bảo đảm việc làm, thu nhập cho người lao động và đáp ứng nhu cầu xã hội, lợi ích của các bên có thể được thực hiện đồng thời."
+      },
+      {
+        category: "Nhân tố ảnh hưởng",
+        text: "Tập hợp nào gồm đầy đủ các nhân tố chính ảnh hưởng đến quan hệ lợi ích kinh tế?",
+        options: [
+          "Trình độ lực lượng sản xuất; địa vị của chủ thể trong quan hệ sản xuất; chính sách phân phối thu nhập của Nhà nước; hội nhập kinh tế quốc tế.",
+          "Quy mô dân số; thời tiết; vị trí địa lý; tập quán tiêu dùng.",
+          "Mức lãi suất; giá vàng; tỷ giá; số lượng doanh nghiệp nhà nước.",
+          "Trình độ học vấn; cơ cấu tuổi; chính sách văn hóa; điều kiện khí hậu."
+        ],
+        correct: 0,
+        explanation: "Các nhân tố chính gồm trình độ lực lượng sản xuất, địa vị của chủ thể trong hệ thống quan hệ sản xuất, chính sách phân phối thu nhập của Nhà nước và hội nhập kinh tế quốc tế."
+      },
+      {
+        category: "Người lao động và người sử dụng lao động",
+        text: "Quan hệ lợi ích giữa người lao động và người sử dụng lao động có đặc điểm nào?",
+        options: [
+          "Chỉ có mâu thuẫn, không có lợi ích chung.",
+          "Lợi ích của người lao động thể hiện ở lợi nhuận, còn lợi ích của người sử dụng lao động thể hiện ở tiền lương.",
+          "Hai bên có lợi ích hoàn toàn giống nhau nên không cần quy định pháp luật.",
+          "Lợi ích gắn bó với nhau nhưng cũng có thể mâu thuẫn, nhất là trong phân chia giữa tiền lương và lợi nhuận; việc giải quyết cần tuân thủ pháp luật."
+        ],
+        correct: 3,
+        explanation: "Người lao động quan tâm trước hết đến tiền lương, tiền thưởng; người sử dụng lao động quan tâm đến lợi nhuận. Hoạt động kinh doanh có hiệu quả có thể mang lại lợi ích cho cả hai, song việc phân chia thu nhập cũng có thể làm nảy sinh mâu thuẫn."
+      },
+      {
+        category: "Quan hệ giữa những người sử dụng lao động",
+        text: "Trong nền kinh tế thị trường, quan hệ giữa những người sử dụng lao động thường diễn ra như thế nào?",
+        options: [
+          "Họ chỉ hợp tác, không cạnh tranh với nhau.",
+          "Họ vừa là đối tác, liên kết và hỗ trợ nhau, vừa là đối thủ cạnh tranh về thị trường, lao động và nguồn lực.",
+          "Họ không có quan hệ lợi ích vì mỗi doanh nghiệp hoạt động độc lập.",
+          "Họ chỉ cạnh tranh trong cùng một ngành, không có cạnh tranh giữa các ngành."
+        ],
+        correct: 1,
+        explanation: "Những người sử dụng lao động vừa liên kết, hỗ trợ nhau, vừa cạnh tranh để tiếp cận thị trường, lao động, vốn và các nguồn lực. Cạnh tranh diễn ra cả trong cùng ngành lẫn giữa các ngành."
+      },
+      {
+        category: "Quan hệ giữa những người lao động",
+        text: "Điều gì có thể xảy ra khi nhiều người cùng tìm việc và bán sức lao động trên thị trường?",
+        options: [
+          "Cạnh tranh giữa người lao động có thể làm tiền lương giảm hoặc một bộ phận bị sa thải; đoàn kết và tổ chức hợp pháp giúp họ bảo vệ quyền lợi tốt hơn.",
+          "Tiền lương của mọi người tự động tăng như nhau.",
+          "Người lao động không còn cần quan hệ với người sử dụng lao động.",
+          "Cạnh tranh giữa người lao động luôn làm mất mọi khả năng hợp tác."
+        ],
+        correct: 0,
+        explanation: "Khi có nhiều người tìm việc, cạnh tranh có thể gây sức ép giảm tiền lương và làm một số người mất việc. Sự đoàn kết, hỗ trợ và tổ chức đại diện hợp pháp giúp người lao động bảo vệ lợi ích của mình."
+      },
+      {
+        category: "Lợi ích cá nhân, nhóm và xã hội",
+        text: "Quan điểm nào phù hợp về lợi ích cá nhân, lợi ích nhóm và lợi ích xã hội?",
+        options: [
+          "Mọi lợi ích nhóm đều có hại và cần bị loại bỏ.",
+          "Lợi ích cá nhân không liên quan đến sự phát triển của xã hội.",
+          "Lợi ích cá nhân chính đáng là nền tảng của các lợi ích khác; lợi ích xã hội định hướng lợi ích cá nhân, còn lợi ích nhóm chỉ nên được tôn trọng khi không gây hại cho lợi ích chung.",
+          "Lợi ích của một nhóm luôn được ưu tiên hơn lợi ích quốc gia."
+        ],
+        correct: 2,
+        explanation: "Lợi ích cá nhân chính đáng là cơ sở để thực hiện các lợi ích tập thể và xã hội; lợi ích xã hội định hướng cho hoạt động cá nhân. Lợi ích nhóm cần được xem xét theo tác động của nó đối với lợi ích quốc gia và các lợi ích hợp pháp khác."
+      },
+      {
+        category: "Phương thức thực hiện lợi ích",
+        text: "Hai phương thức cơ bản để thực hiện lợi ích kinh tế trong nền kinh tế thị trường là gì?",
+        options: [
+          "Thỏa thuận tự phát và phân chia bình quân mọi kết quả.",
+          "Chỉ thực hiện theo mệnh lệnh hành chính của Nhà nước.",
+          "Dựa hoàn toàn vào thương lượng cá nhân, không cần tổ chức xã hội.",
+          "Thực hiện theo nguyên tắc thị trường; đồng thời dựa vào chính sách của Nhà nước và vai trò của các tổ chức xã hội để khắc phục hạn chế xã hội."
+        ],
+        correct: 3,
+        explanation: "Lợi ích kinh tế được thực hiện theo nguyên tắc thị trường và theo chính sách của Nhà nước, cùng vai trò của các tổ chức xã hội. Phương thức thứ hai giúp khắc phục những hạn chế xã hội nếu chỉ dựa vào thị trường."
+      },
+      {
+        category: "Vai trò của Nhà nước",
+        text: "Nhà nước tạo môi trường thuận lợi cho các chủ thể tìm kiếm lợi ích kinh tế bằng cách nào?",
+        options: [
+          "Bảo đảm ổn định chính trị, xây dựng pháp luật thông thoáng và bảo vệ lợi ích hợp pháp, đầu tư kết cấu hạ tầng, ban hành chính sách phù hợp và xây dựng môi trường văn hóa tôn trọng kỷ cương, chữ tín.",
+          "Thay thế mọi doanh nghiệp trong hoạt động sản xuất và kinh doanh.",
+          "Chỉ tập trung mở rộng hạ tầng, không cần quan tâm đến pháp luật và ổn định chính trị.",
+          "Hạn chế quyền kinh doanh hợp pháp để giảm cạnh tranh giữa các chủ thể."
+        ],
+        correct: 0,
+        explanation: "Môi trường thuận lợi bao gồm ổn định chính trị, pháp luật bảo vệ lợi ích hợp pháp, kết cấu hạ tầng, chính sách phù hợp với từng giai đoạn và môi trường văn hóa tôn trọng pháp luật, kỷ cương, chữ tín."
+      },
+      {
+        category: "Điều hòa và kiểm soát lợi ích",
+        text: "Để hài hòa lợi ích cá nhân, doanh nghiệp và xã hội, Nhà nước cần kết hợp giải pháp nào?",
+        options: [
+          "Bảo đảm mọi chủ thể có thu nhập bằng nhau, bất kể đóng góp.",
+          "Điều tiết phân phối để hạn chế chênh lệch quá đáng, tạo cơ hội và mức sống tối thiểu; đồng thời ngăn chặn thu nhập bất hợp pháp bằng pháp luật, giám sát và bộ máy công quyền liêm chính.",
+          "Ưu tiên lợi nhuận doanh nghiệp và bỏ qua hệ quả đối với người lao động, người tiêu dùng.",
+          "Chỉ tuyên truyền đạo đức, không cần chính sách phân phối hay xử lý vi phạm."
+        ],
+        correct: 1,
+        explanation: "Nhà nước cần kết hợp chính sách phân phối để hạn chế bất bình đẳng thái quá và bảo đảm cơ hội với việc kiểm soát các lợi ích tiêu cực như buôn lậu, hàng giả, lừa đảo, tham nhũng và trốn thuế."
+      }
+    ];
+
+    const letters = ["A", "B", "C", "D"];
+    let current = 0;
+    let selected = null;
+    let locked = false;
+    let score = 0;
+
+    const countEl = document.getElementById("question-count");
+    const progressFill = document.getElementById("progress-fill");
+    const progressTrack = document.getElementById("progress-track");
+    const categoryEl = document.getElementById("question-category");
+    const questionText = document.getElementById("question-text");
+    const answersEl = document.getElementById("answers");
+    const feedback = document.getElementById("feedback");
+    const feedbackTitle = document.getElementById("feedback-title");
+    const feedbackCopy = document.getElementById("feedback-copy");
+    const confirmButton = document.getElementById("confirm-button");
+    const questionArea = document.getElementById("question-area");
+    const result = document.getElementById("result");
+
+    function updateProgress(completed) {
+      const percent = Math.round(completed / questions.length * 100);
+      progressFill.style.width = `${percent}%`;
+      progressTrack.setAttribute("aria-valuenow", String(completed));
+    }
+
+    function renderQuestion() {
+      const q = questions[current];
+      selected = null;
+      locked = false;
+      countEl.innerHTML = `<strong>Câu ${current + 1}</strong> / ${questions.length}`;
+      categoryEl.textContent = q.category;
+      questionText.textContent = q.text;
+      answersEl.replaceChildren();
+      feedback.className = "feedback";
+      feedbackTitle.textContent = "";
+      feedbackCopy.textContent = "";
+      confirmButton.disabled = true;
+      confirmButton.innerHTML = 'Xác nhận đáp án <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11m-4-4 4 4-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+      q.options.forEach((option, index) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "answer";
+        button.setAttribute("aria-pressed", "false");
+        button.innerHTML = `<span class="answer-key">${letters[index]}</span><span class="answer-copy"></span>`;
+        button.querySelector(".answer-copy").textContent = option;
+        button.addEventListener("click", () => selectAnswer(index));
+        answersEl.append(button);
+      });
+      updateProgress(current);
+      document.getElementById("live-score").textContent = `${score} điểm`;
+      questionText.focus({preventScroll: true});
+    }
+
+    function selectAnswer(index) {
+      if (locked) return;
+      selected = index;
+      [...answersEl.children].forEach((button, i) => button.setAttribute("aria-pressed", String(i === index)));
+      confirmButton.disabled = false;
+    }
+
+    function confirmAnswer() {
+      if (selected === null || locked) return;
+      locked = true;
+      const q = questions[current];
+      const correct = selected === q.correct;
+      if (correct) score += 1;
+      [...answersEl.children].forEach((button, i) => {
+        button.disabled = true;
+        if (i === q.correct) button.classList.add("is-correct");
+        if (i === selected && !correct) button.classList.add("is-wrong");
+      });
+      feedback.className = `feedback visible ${correct ? "correct" : "incorrect"}`;
+      feedbackTitle.textContent = correct ? "✓  Chính xác!" : `Đáp án đúng: ${letters[q.correct]}`;
+      feedbackCopy.textContent = q.explanation;
+      document.getElementById("live-score").textContent = `${score} điểm`;
+      updateProgress(current + 1);
+      confirmButton.innerHTML = current === questions.length - 1
+        ? 'Xem kết quả <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11m-4-4 4 4-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+        : 'Câu tiếp theo <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11m-4-4 4 4-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    }
+
+    function showResult() {
+      questionArea.hidden = true;
+      result.classList.add("visible");
+      countEl.innerHTML = `<strong>Hoàn thành</strong> · ${questions.length} / ${questions.length}`;
+      document.getElementById("live-score").textContent = `${score} điểm`;
+      document.getElementById("final-score").textContent = String(score);
+      document.getElementById("right-count").textContent = String(score);
+      document.getElementById("wrong-count").textContent = String(questions.length - score);
+      document.getElementById("result-meter-fill").style.width = `${score / questions.length * 100}%`;
+      const lead = score === questions.length
+        ? "Xuất sắc! Bạn đã nắm rất chắc những nội dung trọng tâm."
+        : score >= 12
+          ? "Bạn đã hiểu tốt phần lớn nội dung. Hãy xem lại những câu cần ôn thêm để củng cố kiến thức."
+          : score >= 7
+            ? "Bạn đã có nền tảng ban đầu. Đọc lại phần giải thích rồi thử sức thêm một lượt nhé."
+            : "Hãy xem lại từng phần giải thích để hệ thống hóa các ý chính, rồi chơi lại khi sẵn sàng. ";
+      document.getElementById("result-lead").textContent = lead;
+      document.getElementById("restart-button").focus({preventScroll: true});
+    }
+
+    confirmButton.addEventListener("click", () => {
+      if (!locked) {
+        confirmAnswer();
+        return;
+      }
+      if (current === questions.length - 1) {
+        showResult();
+        return;
+      }
+      current += 1;
+      renderQuestion();
+    });
+
+    document.getElementById("restart-button").addEventListener("click", () => {
+      current = 0;
+      score = 0;
+      result.classList.remove("visible");
+      questionArea.hidden = false;
+      renderQuestion();
+    });
+
+    renderQuestion();
+  </script>
+</body>
+</html>
